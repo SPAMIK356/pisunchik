@@ -4,6 +4,7 @@ from google import genai
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
+from os import getenv
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -11,8 +12,15 @@ async def lifespan(app: FastAPI):
     load_dotenv()
 
     global client
+    global usedModel
+    model = getenv("MODEL")
 
+    if model == None:
+        raise Exception("Моедль не вказана! Додайте назву моделі в файл .env під назвою 'MODEL'!")
+
+    usedModel = str(model)
     client = genai.Client()
+    
 
     yield
 
@@ -31,10 +39,11 @@ app.add_middleware(
 
 
 class UserParams(BaseModel):
-    weight: float
-    age : int
-    sex : str
-    goal : str
+    weight: float = Field(description="Вага користувача в кілограмах")
+    age : int = Field(description="Вік користувача в роках (ціле число)")
+    height : int = Field(description="Зріст користувача (в сантиметрах)")
+    sex : str = Field(description="Стать користувача")
+    goal : str = Field(description="Мета користувача")
 
 
 class Macros(BaseModel):
@@ -51,8 +60,29 @@ class Meal(BaseModel):
 class Plan(BaseModel):
     meals : list[Meal] = Field(description="Список прийомів їжі на цей день")
     macros_and_cals : Macros = Field(description="Сумарна калорійність та поживна цінність всіх вказаних прийомів їжі")
-    note : str = Field(description="Додаткова інформація")
+    note : str = Field(description="Додаткова інформація (1-3 речення)")
 
 @app.post('/get_plan')
 async def get_plan(userParams : UserParams):
-    """"""
+    """#Генерує план прийому їжі
+    
+    На основі переданих даних генерує детальний план прийому їжі на день.
+    
+    Повертає об'єкт **Plan**."""
+    prompt = ("Згенеруй план прийому їжі на день, враховуючи КБЖВ, для користувача з наступними даними:\n" 
+              f"Стать: {userParams.sex}\n"
+               f"Вік: {userParams.age}\n"
+               f"Зріст: {userParams.height}\n"
+               f"Вага: {userParams.weight}\n"
+               f"Мета: {userParams.goal}")
+    response = await client.aio.models.generate_content(
+                                                        model=usedModel,contents=prompt,
+                                                        
+                                                        config={"response_mime_type": "application/json",
+                                                                "response_json_schema": Plan.model_json_schema(),
+                                                                }
+                                                        )
+    
+    result = Plan.model_validate_json(str(response.text))
+
+    return Plan
