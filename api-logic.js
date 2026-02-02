@@ -1,28 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submit-btn');
 
-    // Перезаписуємо onclick. Тепер тут буде реальна логіка.
     submitBtn.onclick = async function (e) {
-        e.preventDefault(); // Щоб форма не перезавантажила сторінку
+        e.preventDefault(); 
 
         const loader = document.getElementById('loader');
         const resultArea = document.getElementById('result-area');
 
-        // --- 1. ЗБИРАЄМО ДАНІ (Твоя частина) ---
         const age = parseInt(document.getElementById('age').value);
         const height = parseInt(document.getElementById('height').value);
         const weight = parseInt(document.getElementById('weight').value);
         
-        // Для радіо-кнопок (стать) треба знайти ту, що "checked"
         const gender = document.querySelector('input[name="gender"]:checked').value;
 
-        // Логіка для мети (якщо обрано "Інше", беремо текст з інпуту)
         let goal = document.getElementById('goal').value;
         if (goal === 'other') {
             goal = document.getElementById('goal-other').value || "Збалансоване харчування";
         }
-
-        // Формуємо об'єкт для бекенду
         const requestData = {
             weight: weight,
             height: height,
@@ -31,13 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
             goal: goal
         };
 
-        // --- 2. ПОКАЗУЄМО ЛОАДЕР (Частина напарниці) ---
         loader.style.display = 'flex';
-        resultArea.style.display = 'none'; // Ховаємо старі результати, якщо були
+        resultArea.style.display = 'none'; 
 
         try {
-            // --- 3. ЗАПИТ НА СЕРВЕР (Замість setTimeout) ---
-            // Це може зайняти 5-10 секунд, тому лоадер крутиться
+
             const response = await fetch('http://127.0.0.1:8000/get_plan', {
                 method: 'POST',
                 headers: {
@@ -50,29 +42,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Помилка сервера');
             }
 
-            const data = await response.json(); // Отримали JSON з бекенду
+            const data = await response.json(); 
 
-            // --- 4. ОНОВЛЮЄМО ІНТЕРФЕЙС (Мікс) ---
-            
-            // Ховаємо лоадер
+
             loader.style.display = 'none';
             resultArea.style.display = 'block';
 
-            // Заповнюємо цифри (КБЖВ)
+
             document.getElementById('res-kcal').innerText = data.macros_and_cals.kalories;
             document.getElementById('res-p').innerText = data.macros_and_cals.proteins + 'г';
             document.getElementById('res-f').innerText = data.macros_and_cals.fats + 'г';
             document.getElementById('res-c').innerText = data.macros_and_cals.carbs + 'г';
 
-            // Вставляємо діаграму
+
             const chartImg = document.getElementById('diet-chart');
             chartImg.src = "data:image/png;base64," + data.chart_image;
-            // Прибираємо напис "генерується...", якщо він там є
+
             document.getElementById('chart-placeholder').style.display = 'none';
 
-            // Генеруємо список страв (красиво, через шаблонні рядки)
+
             const mealsContainer = document.getElementById('diet-result');
-            mealsContainer.innerHTML = ''; // Чистимо старе
+            mealsContainer.innerHTML = '';
 
             data.meals.forEach(meal => {
                 const mealHTML = `
@@ -92,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 mealsContainer.innerHTML += mealHTML;
             });
 
-            // --- 5. СКРОЛЛ (Код напарниці) ---
+
             setTimeout(() => {
                 const headerHeight = document.querySelector('.glass-header').offsetHeight;
                 const elementPosition = resultArea.getBoundingClientRect().top;
