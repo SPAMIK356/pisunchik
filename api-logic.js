@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             const chartImg = document.getElementById('diet-chart');
-            chartImg.src = "data:image/png;base64," + data.chart_image;
+            chartImg.src = "data:image/png;base64," + data.chart_img;
 
             document.getElementById('chart-placeholder').style.display = 'none';
 
@@ -82,6 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 mealsContainer.innerHTML += mealHTML;
             });
 
+            if (data.note) {
+                const noteHTML = `
+                    <div style="margin-top: 25px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; border-left: 3px solid #ff7e5f; font-size: 0.95em; line-height: 1.5;">
+                        <strong style="display:block; margin-bottom: 5px; color: #ff7e5f;">💡 Корисна порада:</strong>
+                        ${data.note}
+                    </div>
+                `;
+                mealsContainer.innerHTML += noteHTML;
+            }
 
             setTimeout(() => {
                 const headerHeight = document.querySelector('.glass-header').offsetHeight;
