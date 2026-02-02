@@ -5,6 +5,13 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from os import getenv
+import macros_graph_plotter as plt
+
+#Налаштування для діаграми
+colors = ['#FFB74D','#4DB6AC','#64B5F6'] #Жири, білки, вуглеводи
+
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -62,8 +69,12 @@ class Plan(BaseModel):
     macros_and_cals : Macros = Field(description="Сумарна калорійність та поживна цінність всіх вказаних прийомів їжі")
     note : str = Field(description="Додаткова інформація (1-3 речення)")
 
+class PlanResponse(Plan):
+    chart_img : str = Field(description="Кругова діаграма БЖВ в base64 кодуванні") 
+    
+
 @app.post('/get_plan')
-async def get_plan(userParams : UserParams) -> Plan:
+async def get_plan(userParams : UserParams) -> PlanResponse:
     """# Генерує план прийому їжі
     
     На основі переданих даних генерує детальний план прийому їжі на день.
@@ -85,4 +96,10 @@ async def get_plan(userParams : UserParams) -> Plan:
     
     result = Plan.model_validate_json(str(response.text))
 
-    return result
+    chart_img = plt.generate_pieplot([result.macros_and_cals.fats, 
+                                      result.macros_and_cals.proteins,
+                                      result.macros_and_cals.carbs] ,
+                                      colors)
+
+    completePlan = PlanResponse(**result.model_dump(), chart_img=chart_img)
+    return completePlan
