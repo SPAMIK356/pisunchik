@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
-            const response = await fetch('http://127.0.0.1:8000/get_plan', {
+            const response = await fetch('http://46.224.54.26:2500/get_plan', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
