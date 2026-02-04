@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 0. НАЛАШТУВАННЯ СЕРВЕРА (FAILOVER)
 
     const LOCAL_API = 'http://127.0.0.1:8000'; 
-    const REMOTE_API = 'http://46.224.54.26:2500'; 
+    const REMOTE_API = "https://857d-2a01-4f8-1c1a-9da2-00-1.ngrok-free.app "//'http://46.224.54.26:2500'; 
     let currentApiUrl = REMOTE_API; 
 
     async function selectServer() {
@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${currentApiUrl}/get_plan`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning' : 1
                 },
                 body: JSON.stringify(requestData)
             });
