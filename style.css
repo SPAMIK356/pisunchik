@@ -785,6 +785,15 @@ img:not([src]), img[src=""] { display: none !important; }
     font-weight: 500;
 }
 
+#goal-other {
+    animation: fadeInShort 0.3s ease-out;
+}
+
+@keyframes fadeInShort {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Адаптивність */
 @media (max-width: 850px) {
     .footer-bar {

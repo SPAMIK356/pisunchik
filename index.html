@@ -245,25 +245,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setTimeout(type, 1000);
 
-    // 2. Паралакс фруктів (Фіксовані на місці, рухаються за мишкою)
+    // 2. Паралакс декорацій (рух за мишкою)
     document.addEventListener('mousemove', (e) => {
         const items = document.querySelectorAll('.floating-item');
-        // Розрахунок відхилення від центру екрана
         const x = (window.innerWidth / 2 - e.clientX) / 50;
         const y = (window.innerHeight / 2 - e.clientY) / 50;
 
         items.forEach((item, index) => {
-            // Кожен фрукт рухається з трохи різною швидкістю для об'єму
             const speed = (index + 1) * 0.5; 
             item.style.transform = `translate(${x * speed}px, ${y * speed}px) rotate(${x}deg)`;
         });
     });
 
-    // 3. Універсальна логіка модального вікна (Про нас)
+    // 3. Універсальна логіка модального вікна
     const modal = document.getElementById("about-modal");
     const closeBtn = document.querySelector(".close-modal");
-    
-    // Всі кнопки, які мають відкривати модалку
     const triggers = document.querySelectorAll('#nav-about, .btn-secondary, .open-modal-footer, .open-modal');
 
     triggers.forEach(btn => {
@@ -281,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) modal.style.display = "none";
     });
 
-    // 4. Логіка слайдерів калькулятора
+    // 4. Логіка слайдерів калькулятора (Вік, Зріст, Вага)
     ['age', 'height', 'weight'].forEach(id => {
         const input = document.getElementById(id);
         const output = document.getElementById(id + '-val');
@@ -290,20 +286,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 5. Картки вибору мети
-    document.querySelectorAll('.goal-card').forEach(card => {
+    // 5. Картки вибору мети + ЛОГІКА ПОЛЯ "ІНШЕ"
+    const goalCards = document.querySelectorAll('.goal-card');
+    const goalOtherInput = document.getElementById('goal-other');
+    const hiddenGoalInput = document.getElementById('goal');
+
+    goalCards.forEach(card => {
         card.onclick = function() {
-            document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('active'));
+            // Прибираємо активний стан у всіх
+            goalCards.forEach(c => c.classList.remove('active'));
+            // Додаємо поточній
             this.classList.add('active');
-            const hiddenInput = document.getElementById('goal');
-            if (hiddenInput) hiddenInput.value = this.getAttribute('data-value');
+            
+            const selectedValue = this.getAttribute('data-value');
+            if (hiddenGoalInput) hiddenGoalInput.value = selectedValue;
+
+            // Перевірка на "Інше"
+            if (selectedValue === 'other') {
+                goalOtherInput.style.display = 'block';
+                goalOtherInput.focus(); // Курсор одразу в поле
+            } else {
+                goalOtherInput.style.display = 'none';
+                goalOtherInput.value = ''; // Очищуємо поле
+            }
         }
     });
 
-    // 6. Intersection Observer для анімацій появи
+    // 6. Intersection Observer для анімацій появи при скролі
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
     }, { threshold: 0.1 });
     
