@@ -123,36 +123,50 @@
                     <h2>Твій персональний план</h2>
                 </div>
                 <div class="results-bento">
-                    <div class="macro-card kcal">
-                        <span class="label">Калорії</span>
-                        <span id="res-kcal" class="value">0</span>
-                    </div>
-                    <div class="macro-card protein">
-                        <span class="label">Білки</span>
-                        <span id="res-p" class="value">0г</span>
-                    </div>
-                    <div class="macro-card fats">
-                        <span class="label">Жири</span>
-                        <span id="res-f" class="value">0г</span>
-                    </div>
-                    <div class="macro-card carbs">
-                        <span class="label">Вуглеводи</span>
-                        <span id="res-c" class="value">0г</span>
-                    </div>
-                    <div class="bento-item meal-plan glass-card">
-                        <h3>Меню на день</h3>
-                        <div id="diet-result" class="meal-content">
-                            Тут з'явиться план від ШІ...
-                        </div>
-                    </div>
-                    <div class="bento-item chart-area glass-card">
-                        <h3>Розподіл нутрієнтів</h3>
-                        <div class="chart-wrapper">
-                            <img id="diet-chart" src="" alt="Діаграма">
-                            <div id="chart-placeholder" class="placeholder">Діаграма генерується...</div>
-                        </div>
-                    </div>
-                </div>
+    <div class="macro-card kcal">
+        <span class="label">Калорії</span>
+        <span id="res-kcal" class="value">0</span>
+    </div>
+    <div class="macro-card protein">
+        <span class="label">Білки</span>
+        <span id="res-p" class="value">0г</span>
+    </div>
+    <div class="macro-card fats">
+        <span class="label">Жири</span>
+        <span id="res-f" class="value">0г</span>
+    </div>
+    <div class="macro-card carbs">
+        <span class="label">Вуглеводи</span>
+        <span id="res-c" class="value">0г</span>
+    </div>
+
+    <div class="bento-item chart-area glass-card">
+        <h3>Розподіл</h3>
+        <div class="chart-wrapper">
+            <img id="diet-chart" src="" alt="Діаграма">
+            <div id="chart-placeholder" class="placeholder">📊</div>
+        </div>
+    </div>
+
+    <div class="bento-item meal-plan glass-card">
+        <div class="meal-header">
+            <h3>План харчування</h3>
+        </div>
+        <div id="diet-result" class="meal-grid">
+            <p class="placeholder-text">Натисніть кнопку вище, щоб сформувати меню...</p>
+        </div>
+    </div>
+
+    <div class="bento-item tip-area glass-card">
+        <div class="tip-content">
+            <div class="icon-wrap">💡</div>
+            <div>
+                <h4>Корисна порада</h4>
+                <p id="ai-tip">Пий достатньо води протягом дня для підтримки метаболізму.</p>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </section>
@@ -170,7 +184,7 @@
                 </div>
                 <h2>Твій успіх — наше натхнення ✨</h2>
                 <p>Допоможи нам стати кращими. Поділися своїм результатом!</p>
-                <a href="https://forms.gle/your-link" target="_blank" class="btn-primary">Залишити відгук 💬</a>
+                <a href="https://forms.gle/hLRBFVwG1UgTi7v77" target="_blank" class="btn-primary">Залишити відгук 💬</a>
             </div>
         </div>
     </section>
@@ -206,132 +220,114 @@
     </div>
 </div>
 
-    <script>
-        const typewriter = document.getElementById('typewriter');
-const phrases = ["розумний раціон", "турботу про себе", "твою енергію", "науковий підхід"];
-let phraseIdx = 0;
-let charIdx = 0;
-let isDeleting = false;
-
-function type() {
-    const currentPhrase = phrases[phraseIdx];
-    
-    if (isDeleting) {
-        typewriter.textContent = currentPhrase.substring(0, charIdx - 1);
-        charIdx--;
-    } else {
-        typewriter.textContent = currentPhrase.substring(0, charIdx + 1);
-        charIdx++;
-    }
-
-    let typeSpeed = isDeleting ? 50 : 100;
-
-    if (!isDeleting && charIdx === currentPhrase.length) {
-        typeSpeed = 2000; // Пауза в кінці фрази
-        isDeleting = true;
-    } else if (isDeleting && charIdx === 0) {
-        isDeleting = false;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-        typeSpeed = 500;
-    }
-
-    setTimeout(type, typeSpeed);
-}
-
-// 2. Паралакс декорацій за мишкою
-document.addEventListener('mousemove', (e) => {
-    const items = document.querySelectorAll('.floating-item');
-    const x = (window.innerWidth - e.pageX * 2) / 100;
-    const y = (window.innerHeight - e.pageY * 2) / 100;
-
-    items.forEach(item => {
-        const speed = item.getAttribute('data-speed');
-        item.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px) rotate(${x * 2}deg)`;
-    });
-});
-
-// Запуск друку
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(type, 1000);
-});
+    // 1. Ефект друкарської машинки
+    const typewriter = document.getElementById('typewriter');
+    const phrases = ["розумний раціон", "турботу про себе", "твою енергію", "науковий підхід"];
+    let phraseIdx = 0, charIdx = 0, isDeleting = false;
 
-        const sliders = ['age', 'height', 'weight'];
-        sliders.forEach(id => {
-            const input = document.getElementById(id);
-            const output = document.getElementById(id + '-val');
-            if (input && output) {
-                input.oninput = function() {
-                    output.innerHTML = this.value;
-                }
-            }
-        });
+    function type() {
+        const currentPhrase = phrases[phraseIdx] || "";
+        typewriter.textContent = isDeleting 
+            ? currentPhrase.substring(0, charIdx - 1) 
+            : currentPhrase.substring(0, charIdx + 1);
+        
+        charIdx = isDeleting ? charIdx - 1 : charIdx + 1;
+        let speed = isDeleting ? 50 : 100;
 
-        document.querySelectorAll('.goal-card').forEach(card => {
-            card.onclick = function() {
-                document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                
-                const goalValue = this.getAttribute('data-value');
-                document.getElementById('goal').value = goalValue;
-                
-                const otherInput = document.getElementById('goal-other');
-                if (otherInput) {
-                    otherInput.style.display = (goalValue === 'other') ? 'block' : 'none';
-                }
-            }
-        });
-
-        const modal = document.getElementById("about-modal");
-        const closeBtn = document.querySelector(".close-modal");
-        const btn = document.querySelector(".btn-secondary");
-        const span = document.getElementsByClassName("close-modal")[0];
-
-        const aboutTriggers = [
-    document.querySelector(".btn-secondary"), 
-    document.getElementById("nav-about")
-];
-
-aboutTriggers.forEach(trigger => {
-    if (trigger) {
-        trigger.onclick = (e) => {
-            e.preventDefault();
-            modal.style.display = "flex";
+        if (!isDeleting && charIdx === currentPhrase.length) {
+            speed = 2000; isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+            isDeleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; speed = 500;
         }
+        setTimeout(type, speed);
     }
-});
+    setTimeout(type, 1000);
 
-closeBtn.onclick = () => modal.style.display = "none";
+    // 2. Паралакс фруктів (Фіксовані на місці, рухаються за мишкою)
+    document.addEventListener('mousemove', (e) => {
+        const items = document.querySelectorAll('.floating-item');
+        // Розрахунок відхилення від центру екрана
+        const x = (window.innerWidth / 2 - e.clientX) / 50;
+        const y = (window.innerHeight / 2 - e.clientY) / 50;
 
-window.onclick = (event) => {
-    if (event.target == modal) modal.style.display = "none";
-}
-
-        if (btn) {
-            btn.onclick = function(e) {
-                e.preventDefault();
-                modal.style.display = "flex";
-            }
-        }
-
-        if (span) {
-            span.onclick = function() { modal.style.display = "none"; }
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) { modal.style.display = "none"; }
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
+        items.forEach((item, index) => {
+            // Кожен фрукт рухається з трохи різною швидкістю для об'єму
+            const speed = (index + 1) * 0.5; 
+            item.style.transform = `translate(${x * speed}px, ${y * speed}px) rotate(${x}deg)`;
         });
+    });
 
-        document.querySelectorAll('.fade-in-scroll').forEach((el) => observer.observe(el));
-    </script>
+    // 3. Універсальна логіка модального вікна (Про нас)
+    const modal = document.getElementById("about-modal");
+    const closeBtn = document.querySelector(".close-modal");
+    
+    // Всі кнопки, які мають відкривати модалку
+    const triggers = document.querySelectorAll('#nav-about, .btn-secondary, .open-modal-footer, .open-modal');
+
+    triggers.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                modal.style.display = "flex";
+            });
+        }
+    });
+
+    if (closeBtn) closeBtn.onclick = () => modal.style.display = "none";
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    });
+
+    // 4. Логіка слайдерів калькулятора
+    ['age', 'height', 'weight'].forEach(id => {
+        const input = document.getElementById(id);
+        const output = document.getElementById(id + '-val');
+        if (input && output) {
+            input.oninput = () => output.innerHTML = input.value;
+        }
+    });
+
+    // 5. Картки вибору мети
+    document.querySelectorAll('.goal-card').forEach(card => {
+        card.onclick = function() {
+            document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            const hiddenInput = document.getElementById('goal');
+            if (hiddenInput) hiddenInput.value = this.getAttribute('data-value');
+        }
+    });
+
+    // 6. Intersection Observer для анімацій появи
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.fade-in-scroll').forEach((el) => observer.observe(el));
+});
+</script>
 
     <script src="./api-logic.js" defer></script>
+
+<footer class="floating-footer">
+    <div class="footer-bar glass-card">
+        <div class="footer-brand">Healthy<span>Plan</span></div>
+        
+        <nav class="footer-nav">
+            <a href="#hero">Головна</a>
+            <a href="#calculator">Калькулятор</a>
+            <a href="#!" class="open-modal">Про нас</a>
+        </nav>
+
+        <div class="footer-rights">
+            © 2026 HealthyPlan. All rights reserved.
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>
